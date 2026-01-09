@@ -55,10 +55,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   const signIn = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error, data } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
+
+    // 确保用户资料存在
+    if (!error && data.user) {
+      const { error: profileError } = await supabase
+        .from("user_profiles")
+        .upsert(
+          {
+            id: data.user.id,
+            email: data.user.email,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "id" }
+        )
+
+      if (profileError) {
+        console.error("Error ensuring user profile exists:", profileError)
+      }
+    }
+
     return { error }
   }
 
@@ -74,10 +93,29 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   const signUp = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signUp({
+    const { error, data } = await supabase.auth.signUp({
       email,
       password,
     })
+
+    // 创建用户资料
+    if (!error && data.user) {
+      const { error: profileError } = await supabase
+        .from("user_profiles")
+        .upsert(
+          {
+            id: data.user.id,
+            email: data.user.email,
+            updated_at: new Date().toISOString(),
+          },
+          { onConflict: "id" }
+        )
+
+      if (profileError) {
+        console.error("Error creating user profile:", profileError)
+      }
+    }
+
     return { error }
   }
 

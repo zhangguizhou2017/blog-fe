@@ -18,11 +18,34 @@ export async function GET(request: Request) {
     const supabase = createServerClient()
 
     try {
-      const { error } = await supabase.auth.exchangeCodeForSession(code)
+      const { error, data } = await supabase.auth.exchangeCodeForSession(code)
 
       if (error) {
         console.error("Error exchanging code for session:", error)
         return NextResponse.redirect(`${origin}/auth-debug?error=exchange_error&error_description=${error.message}`)
+      }
+
+      // 创建或更新用户资料
+      if (data.user) {
+        try {
+          const { error: profileError } = await supabase
+            .from("user_profiles")
+            .upsert(
+              {
+                id: data.user.id,
+                email: data.user.email,
+                updated_at: new Date().toISOString(),
+              },
+              { onConflict: "id" }
+            )
+
+          if (profileError) {
+            console.error("Error creating/updating user profile:", profileError)
+            // 不中断流程，继续重定向
+          }
+        } catch (profileErr) {
+          console.error("Exception creating user profile:", profileErr)
+        }
       }
     } catch (err: any) {
       console.error("Unexpected error during code exchange:", err)
