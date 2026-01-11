@@ -51,7 +51,10 @@ async function getPosts() {
 }
 
 export default async function Home() {
+  console.log('render home - Server Side',)
   const posts = await getPosts()
+  console.log('posts count:', posts.length)
+  console.log('private key', 'lawfiwahagopwgjoiewgew')
 
   return (
     <div className="container mx-auto px-4 py-8">
