@@ -2,6 +2,7 @@ import type React from "react"
 import { Nav } from "@/components/nav"
 import { ThemeProvider } from "@/components/theme-provider"
 import { AuthProvider } from "@/components/auth-provider"
+import { Web3Provider } from "@/components/web3-provider"
 import "@/app/globals.css"
 import type { Metadata } from "next"
 
@@ -21,15 +22,17 @@ export default function RootLayout({
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <AuthProvider>
-            <div className="flex flex-col min-h-screen">
-              <Nav />
-              <main className="flex-1">{children}</main>
-              <footer className="border-t py-6">
-                <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} 博客系统. 保留所有权利.
-                </div>
-              </footer>
-            </div>
+            <Web3Provider>
+              <div className="flex flex-col min-h-screen">
+                <Nav />
+                <main className="flex-1">{children}</main>
+                <footer className="border-t py-6">
+                  <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
+                    © {new Date().getFullYear()} 博客系统. 保留所有权利.
+                  </div>
+                </footer>
+              </div>
+            </Web3Provider>
           </AuthProvider>
         </ThemeProvider>
       </body>

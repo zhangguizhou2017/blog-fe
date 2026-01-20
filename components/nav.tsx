@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { ConnectButton } from '@rainbow-me/rainbowkit'
 
 export function Nav() {
   const { user, signOut } = useAuth()
@@ -38,6 +39,9 @@ export function Nav() {
           <Link href="/categories" className="text-muted-foreground hover:text-foreground">
             分类
           </Link>
+          <Link href="/wallet" className="text-muted-foreground hover:text-foreground">
+            钱包
+          </Link>
           <Link href="/about" className="text-muted-foreground hover:text-foreground">
             关于
           </Link>
@@ -48,6 +52,8 @@ export function Nav() {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input type="search" placeholder="搜索文章..." className="w-[200px] pl-8" />
           </div>
+
+          <ConnectButton />
 
           {user ? (
             <DropdownMenu>
@@ -98,6 +104,9 @@ export function Nav() {
                 </Link>
                 <Link href="/categories" onClick={() => setIsOpen(false)} className="text-lg">
                   分类
+                </Link>
+                <Link href="/wallet" onClick={() => setIsOpen(false)} className="text-lg">
+                  钱包
                 </Link>
                 <Link href="/about" onClick={() => setIsOpen(false)} className="text-lg">
                   关于
